@@ -49,3 +49,11 @@ note: the lecture article is really handy, should probably extract those
 
 [cloudwatch alarms hands on](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/27548328#lecture-article)
 * mostly ec2 instance alarm based on cpu utilisation
+
+[eventbridge](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/27548342#lecture-article)
+* FANCY CRON!!!
+* default timezone is UTC
+* will automatically retry with exponential backoff
+
+[eventbridge hands on](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/27548348#lecture-article)
+* event bus
