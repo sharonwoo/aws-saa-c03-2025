@@ -14,3 +14,8 @@ Practice exams
 * [Maarek dev associate](https://www.udemy.com/course-dashboard-redirect/?course_id=1975038)
 * [Tutorials dojo](https://portal.tutorialsdojo.com/courses/aws-certified-solutions-architect-associate-practice-exams/)
 
+## Plan
+
+* [Track progress every day](https://github.com/users/sharonwoo/projects/4)
+* Mix up studying, taking practice exams, and doing up [data pipeline project](https://github.com/users/sharonwoo/projects/3)
+* Look out for discounts lol
