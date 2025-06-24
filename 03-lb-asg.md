@@ -97,3 +97,23 @@ spec:
 * An SSL certificate enables encrypted traffic between clients and load balancers during transit. This encryption is known as in-flight encryption, meaning data traveling through a network is encrypted and can only be decrypted by the sender and the receiver. TLS is the new one...
 * From a load balancer perspective, users connect over HTTPS, which uses SSL certificates to encrypt the connection. This secure connection occurs over the public internet to the load balancer. Internally, the load balancer performs SSL certificate termination, decrypting the traffic. It then communicates with backend EC2 instances using HTTP, which is unencrypted but occurs over a private Virtual Private Cloud (VPC) network, providing some security.
 * The load balancer loads an X.509 certificate, also known as an SSL or TLS server certificate. AWS Certificate Manager (ACM) is used to manage these certificates in AWS. You can also upload your own certificates to ACM if desired. When setting up an HTTPS listener on a load balancer, you must specify a default certificate. Additionally, you can add an optional list of certificates to support multiple domains. Clients use Server Name Indication (SNI) to specify the hostname they are reaching, allowing the load balancer to select the appropriate certificate.
+
+[connection draining / deregistration delay](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/18611524#lecture-article)
+* For Classic Load Balancers, it is called Connection Draining, whereas for Application Load Balancers or Network Load Balancers, it is referred to as Deregistration Delay.
+* The core idea behind this feature is to provide time for your instances to complete inflight or active requests while the instance is being deregistered or marked unhealthy. Once a connection is being drained, the Elastic Load Balancer (ELB) stops sending new requests to the EC2 instance that is in the draining state during deregistration.
+* The draining period can be configured between 1 and 3600 seconds, with a default of 300 seconds.
+
+[autoscaling group](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528102#lecture-article)
+* scale out or scale in depending on load
+* can be linked to an ALB
+* can be linked to cloudwatch alarms
+* [hands on](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528104#lecture-article): launch template
+
+[scaling policies](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/26148326#lecture-article)
+* Auto Scaling Groups (ASGs) support several scaling policies including dynamic, scheduled, and predictive scaling.
+* Target tracking scaling maintains a specified metric, such as CPU utilization, at a target value by automatically scaling the ASG.
+* Step scaling uses CloudWatch alarms to trigger scaling actions based on defined thresholds.
+* Scheduled and predictive scaling anticipate load changes based on known patterns or forecasts.
+* Important metrics for scaling include CPU utilization, RequestCountPerTarget, network traffic, and custom application-specific metrics.
+* Scaling cooldown periods prevent rapid scaling actions to allow metrics to stabilize after scaling events.
+* Using pre-configured AMIs and enabling detailed monitoring can improve scaling responsiveness and efficiency.
