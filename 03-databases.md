@@ -67,7 +67,7 @@
 * Replica Auto Scaling in Amazon Aurora automatically adds replicas to distribute read traffic and reduce CPU usage.
 * Custom Endpoints allow targeting specific subsets of Aurora instances for specialized workloads, such as analytical queries.
 * Aurora Serverless provides automated database instantiation and auto-scaling based on actual usage, ideal for intermittent or unpredictable workloads (**pay per second**)
-* Aurora Global Database enables cross-region replication with low latency and fast disaster recovery, supporting up to five secondary regions and multiple read replicas.
+* **Aurora Global Database** enables cross-region replication with low latency and fast disaster recovery, supporting up to five secondary regions and multiple read replicas.
 * Aurora **integrates with AWS machine learning services** like SageMaker and Comprehend to provide ML-based predictions via SQL queries. 
 * Babelfish for Aurora PostgreSQL allows applications using Microsoft SQL Server's T-SQL to communicate with Aurora PostgreSQL with minimal code changes, simplifying migrations.
 
@@ -127,3 +127,51 @@
 * MSSQL Server: 1433
 * MariaDB: 3306 (same as MySQL)
 * Aurora: 5432 (if PostgreSQL compatible) or 3306 (if MySQL compatible)
+
+## storage in aws - review section
+
+[choosing the right db](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528430#learning-tools)
+* Choosing the right database depends on workload characteristics such as read/write balance, data size, growth, and latency requirements.
+* Consider data model, query needs, schema flexibility, and whether relational or NoSQL databases are appropriate.
+* AWS offers a variety of managed databases including RDBMS (RDS, Aurora), NoSQL (DynamoDB, ElastiCache, Neptune, DocumentDB, Keyspaces), object stores, data warehousing (Redshift, Athena, EMR), search (OpenSearch), graph (Neptune), ledger (QLDB), and time series (Timestream).
+
+[rds review lecture](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528402#lecture-article)
+
+[aurora AGAIN](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528406#lecture-article) - this is better than the above ugh
+* Aurora Serverless: Designed for unpredictable and intermittent workloads, this feature eliminates the need for capacity planning.
+* Aurora Global Database: Supports up to 16 read instances per region across replicated regions. Storage replication typically occurs in less than one second across regions, which is important for exam considerations. In case of failure in the primary region, a secondary region can be promoted to primary.
+* Aurora Machine Learning: Enables integration with SageMaker and Comprehend for machine learning capabilities on top of Aurora.
+* Aurora Database Cloning: Allows creation of a new Aurora cluster from an existing one for testing or staging purposes. This process is significantly faster than creating a snapshot and restoring it.
+
+[elasticache](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528412#lecture-article)
+
+[dynamo](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528412#lecture-article)
+* Amazon DynamoDB is a managed, serverless, NoSQL database offering millisecond latency.
+* *two capacity modes: provisioned capacity with optional auto scaling, and on-demand capacity for unpredictable workloads.
+* DynamoDB supports high availability across multiple availability zones and provides features like transactions, TTL for expiring data, and **DAX for microsecond read latency (read cache)**.
+* Integration with AWS services includes IAM for security, DynamoDB Streams for event processing with Lambda, and Kinesis Data Streams for extended data retention and processing.
+* **Global tables** enable active-active replication across multiple regions.
+* Backup options include point-in-time recovery for up to 35 days and on-demand backups for longer retention.
+* DynamoDB supports exporting and importing tables to and from Amazon S3 without consuming read capacity units.
+* It is ideal for serverless applications requiring flexible schema and small document storage or as a distributed serverless cache.
+
+[s3](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13672438#lecture-article)
+* great for big objects, infinite scaling
+* storage tiers - transition between with lifecycle policies
+
+[documentdb](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/33878844#lecture-article) - basically aws mongo
+* compatible with mongo
+* same deployment characteristics as aurora
+
+[neptune](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13672456#lecture-article)
+* graph db option
+* **neptune streams** - real time ordered sequence of changes (basically a db log)
+
+[keyspaces](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/33878864#lecture-article) - aws cassandra
+
+[qldb](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/33878866#lecture-article) vs managed blockchain
+* QLDB and Managed Blockchain is that QLDB does not have decentralization; QLDB is a central database owned by Amazon that maintains the journal
+* any time a modification is made, a crypto hash is computed
+* SQL compatible... lol
+
+[timestream zzzz](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/33878868#overview) - sql compatible
