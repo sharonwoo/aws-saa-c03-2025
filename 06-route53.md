@@ -60,3 +60,12 @@
 * routing traffic based on the geographic location of users and resources; AWS resources use region specifications, while non-AWS resources require latitude and longitude coordinates
 * bias value: expand positive, shrink negative
 * need to use **route 53 traffic flow** feature
+
+[ip based routing policy](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/37045728#lecture-article)
+* define a list of CIDRs - then map the location the traffic should be sent to
+
+[multi-value routing policy](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528210#lecture-article)
+* routing traffic to multiple resources simultaneously, up to 8. not a sub for elb
+
+[3rd party domains and route 53](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528212#lecture-article)
+* DNS service provider and domain registrar can differ; just use public hosted zone in route53 and update name server records on registrar's site to point to route53's name servers
