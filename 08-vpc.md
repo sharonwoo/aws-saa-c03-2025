@@ -48,8 +48,18 @@
 * *IGW themselves can't allow access, need to also edit the route table*
 * go VPC console and check no igw. create igw, and then attach igw to vpc. note, this makes some implicit associations, but explciit is probably better. then create route table, public route table for public subnets. private route table for private subnets. edit route for public route table to add `0.0.0.0/0`, target igw
 
-[bastion hosts](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528558#lecture-article)
+[bastion hosts](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528558#lecture-article) + [hands on](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/28874510#lecture-article)
 * special EC2 instance placed in a public subnet, has its own security group, can access ec2 instances in the private subnet because it's in the same VPC as the private subnet
 * we did this at work (this also applies to EKS cluster nodes KEK): 
     * connect via SSH to the bastion host
     * from the bastion host, connect again via SSH to the EC2 instance in the private subnet
+    * bastion host security group must allow inbound from internet on port 22 from specific cidr ranges e.g. corporation or personal ip ranges
+    * remember to generate key pair etc, change permissions
+
+[nat instances - outdated vs nat gateway](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528548#lecture-article) + [hands on](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/28874518#lecture-article)
+* network address translation
+* NAT instances enable EC2 instances in private subnets to access the internet by routing traffic through a NAT instance in a public subnet.
+* The NAT instance rewrites the source IP address of outgoing packets to its own Elastic IP, allowing return traffic to be routed correctly.
+* Source/destination checks must be disabled on the NAT instance to allow it to forward traffic properly.
+* ***NAT instances are outdated, not highly available by default, and require manual management; NAT gateways are the recommended modern solution.***
+
