@@ -57,9 +57,23 @@
     * remember to generate key pair etc, change permissions
 
 [nat instances - outdated vs nat gateway](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528548#lecture-article) + [hands on](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/28874518#lecture-article)
-* network address translation
 * NAT instances enable EC2 instances in private subnets to access the internet by routing traffic through a NAT instance in a public subnet.
 * The NAT instance rewrites the source IP address of outgoing packets to its own Elastic IP, allowing return traffic to be routed correctly.
 * Source/destination checks must be disabled on the NAT instance to allow it to forward traffic properly.
 * ***NAT instances are outdated, not highly available by default, and require manual management; NAT gateways are the recommended modern solution.***
 
+[nat gateways](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528550#lecture-article)
+* aws managed nat instances - managed, high-bandwidth, and highly available solution for enabling internet access from private subnets
+* requires an internet gateway (private -> natgw -> igw)
+* **deployed in public subnets** and route traffic from private subnets to the internet gateway; need multiple gateways in different AZs for high availability
+* require no security group management and cannot be used as bastion hosts, unlike NAT instances
+
+[security groups and nacls](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528552#lecture-article)
+* nacl is at the subnet level, before the security group/ec2 instance
+* **nacls are stateless*; security groups are stateful - outbound response is automatically allowed by the security group without evaluating outbound rules. nacl however, outbound rules are evaluated separately,  so can still deny the outbound request.
+* nacl vs security group:
+    * Security groups operate at the instance level, while NACLs operate at the subnet level.
+    * Security groups support allow rules only; NACLs support both allow and deny rules, enabling blocking of specific IP addresses.
+    * Security groups are stateful, automatically allowing return traffic regardless of rules; NACLs are stateless, requiring evaluation of inbound and outbound rules separately.
+    * For security groups, all rules are evaluated to decide whether to allow traffic; for NACLs, the rule with the highest priority (lowest number) that matches is applied first.
+    * Security groups apply to specific EC2 instances as assigned; NACLs apply to all EC2 instances within the associated subnet.
