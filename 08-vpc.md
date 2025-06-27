@@ -17,7 +17,39 @@
     * each step down means either halving or doubling. so `/31` is 2, `/30` is 2^2... 
 * private IP address ranges defined by IANA: 
     * `10.0.0.0/8`: A large private IP range commonly used in big networks.
-    * `172.16.0.0/12`: Another private IP range.
+    * `172.16.0.0/12`: Another private IP range. - **default aws vpc**
     * `192.168.0.0/16`: Typically used for home networks; devices connected to a home router often have IPs starting with 192.
     * All other IP addresses outside these ranges are public IP addresses used on the internet
+* check with tooling: [https://www.ipaddressguide.com/cidr](https://www.ipaddressguide.com/cidr)
 
+
+[default vpc overview](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528538#lecture-article)
+* all accounts come with 1, they're all internet connected, all ec2 inside got public ipv4. also public and private ipv4 address
+* range is `172.31.0.0/16`, 65535 addresses
+* dhcp options, main route table, main network acl, default tenancy
+    * default network acl is all allow from all protocol etc
+    * provisions default internt gateway and puts it in the main route table
+* default has 3 subnets within 3 azs, each about 4k available ips. each subnet -5 ip from the theoretical pool for aws reserved stuff
+* just make sure your vpc cidr doesn't overlap with corporate network etc
+
+[vpc hands on](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/28874472#lecture-article) + [create subnet](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528542#lecture-article)
+* manual clickops creation urgh
+* reserved IPs: 
+    * The first IP address, which is the network address.
+    * The second IP address (.1), reserved by AWS for the VPC router.
+    * The third IP address (.2), reserved by AWS for mapping to Amazon provided DNS.
+    * The fourth IP address (.3), which is currently not used but reserved for future use.
+    * The last IP address (.255), which is the network broadcast address. (but aws doesn't support this lo)
+* specify the AZ and cidr block
+
+[internet gateway](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528544#lecture-article) + bff **route table** + [hands on](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/28874492#lecture-article)
+* create separately from the VPC
+* will allow resources in the VPC to acces the internet. horizontally scaling + HA + redundant
+* *IGW themselves can't allow access, need to also edit the route table*
+* go VPC console and check no igw. create igw, and then attach igw to vpc. note, this makes some implicit associations, but explciit is probably better. then create route table, public route table for public subnets. private route table for private subnets. edit route for public route table to add `0.0.0.0/0`, target igw
+
+[bastion hosts](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528558#lecture-article)
+* special EC2 instance placed in a public subnet, has its own security group, can access ec2 instances in the private subnet because it's in the same VPC as the private subnet
+* we did this at work (this also applies to EKS cluster nodes KEK): 
+    * connect via SSH to the bastion host
+    * from the bastion host, connect again via SSH to the EC2 instance in the private subnet
