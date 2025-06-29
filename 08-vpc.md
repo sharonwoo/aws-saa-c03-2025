@@ -99,3 +99,13 @@ Rule * - 0.0.0.0/0 DENY all protocols (never gets evaluated)
 ![NACL ephemeral](img/nacl-ephemeral.png)
 
 [nacls and sgs hands on](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/28874530#lecture-article)
+* default NACL of vpc is associated with the subnets created in the vpcs
+* bastion host - set up web server, edit security group to allow http traffic
+* attempt to create a nacl rule with precedence to deny inbound http traffic - demo that the rules work to block traffic, delete outbound rules from security group to show that it's stateful (which cos got inbound, still can send out)
+
+[vpc peering](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528554#lecture-article)
+* create VPCs in different regions or different accounts, and we want to connect them together using the AWS network -- **behave as if they were in the same network**
+* ***VPC network CIDRs must be distant from each other*** - if they have overlapping cidrs they can't communicate
+* **not transitive**: each VPC must be peered with another directly. e.g. A with B, and B with C. A won't be able to talk to C.
+* **must update route table** in each vpc's subnets to ensure they can talk to each other
+* can reference security groups within a security group - reference a security group from a peered VPC across accounts in the same region, no need to reference cidr/ip
