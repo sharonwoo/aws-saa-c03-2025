@@ -69,11 +69,33 @@
 * require no security group management and cannot be used as bastion hosts, unlike NAT instances
 
 [security groups and nacls](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528552#lecture-article)
-* nacl is at the subnet level, before the security group/ec2 instance
-* **nacls are stateless*; security groups are stateful - outbound response is automatically allowed by the security group without evaluating outbound rules. nacl however, outbound rules are evaluated separately,  so can still deny the outbound request.
 * nacl vs security group:
-    * Security groups operate at the instance level, while NACLs operate at the subnet level.
+    * Security groups operate at the instance level, while NACLs operate at the subnet level. 
     * Security groups support allow rules only; NACLs support both allow and deny rules, enabling blocking of specific IP addresses.
-    * Security groups are stateful, automatically allowing return traffic regardless of rules; NACLs are stateless, requiring evaluation of inbound and outbound rules separately.
+    * **nacls are stateless**; security groups are stateful - outbound response is automatically allowed by the security group without evaluating outbound rules. nacl however, outbound rules are evaluated separately,  so can still deny the outbound request.
     * For security groups, all rules are evaluated to decide whether to allow traffic; for NACLs, the rule with the highest priority (lowest number) that matches is applied first.
     * Security groups apply to specific EC2 instances as assigned; NACLs apply to all EC2 instances within the associated subnet.
+* NACL: 
+    * **One per subnet**
+    * **Default NACL** accepts everything inbound/outbound
+        * Don't modify the default NACL, just create a new one
+    * Number (1-32766) determines precedence, lower is higher precedence
+    * First rule match will drive the decision
+    * **AWS recommendation add in increments of 100**
+    * Newly created NACL will deny everything - last rule is * and denies a request as a catchall if no rules match
+    * Great for blocking specific IPs at the subnet level
+
+```
+# default nacl for ipv4 vpc - inbound/outbound
+Rule 100 - 0.0.0.0/0 ALLOW all protocols
+Rule * - 0.0.0.0/0 DENY all protocols (never gets evaluated)
+```
+
+* ephemeral ports: for any two endpoints to establish a connection they must use ports. clients connect to a defined port on the server, and expect a response on an ephemeral port that the client opens for the server's response
+* different OSes use different port ranges e.g. common in linux kernels 32768-60999
+* this is also a thing for muh self-hosted dns sink instance (currently pihole), which i configured with ansible
+* [aws documentation](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html) on nacls
+
+![NACL ephemeral](img/nacl-ephemeral.png)
+
+[nacls and sgs hands on](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/28874530#lecture-article)
