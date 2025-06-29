@@ -108,4 +108,25 @@ Rule * - 0.0.0.0/0 DENY all protocols (never gets evaluated)
 * ***VPC network CIDRs must be distant from each other*** - if they have overlapping cidrs they can't communicate
 * **not transitive**: each VPC must be peered with another directly. e.g. A with B, and B with C. A won't be able to talk to C.
 * **must update route table** in each vpc's subnets to ensure they can talk to each other
-* can reference security groups within a security group - reference a security group from a peered VPC across accounts in the same region, no need to reference cidr/ip
+* can reference security groups within a security group - reference a security group from a peered VPC across accounts in the same region, no need to reference cidr/ip across accounts
+
+[vpc peering hands on](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/28874554#lecture-article)
+* `one in the demo VPC, which we will refer to as the BastionHost, and the other in the default VPC, which we will call the default VPC instance. Our objective is to verify connectivity between these two instances`
+* `BastionHost has an IP address in the 10.0.0.0/16 range, while the default VPC instance has an IP address in the 172.31.36.159 range. This indicates that they reside in different VPCs with distinct CIDR blocks.`
+* `curl request to the default VPC instance's private IP address on port 80, which returns a "hello world" response, confirming connectivity from BastionHost to default VPC instance; attempt the same curl request from the default VPC instance to the BastionHost's private IP address, the request times out. This demonstrates that, by default, instances in separate VPCs cannot communicate with each other due to network isolation`. 
+* **create vpc peering connection** - set requester and acceper vpcs, then need to go and accept peering request - 'pending acceptance' til it's accepted. then **must add routes to the route tables of one or both VPCs** -  in default vpc, `route with the destination set to the CIDR block of the demo VPC and the target set to the peering connection`. in demo vpc, add `add a route with the destination set to the CIDR block of the default VPC and the target set to the same peering connection`
+
+[vpc endpoints](http://udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528556#lecture-article)
+* use VPC endpoints so your instances do not have to traverse the public internet - go thru aws network
+* `For example, an EC2 instance in a private subnet accesses Amazon SNS by routing through the NAT gateway, then the internet gateway, and finally to the Amazon SNS service publicly. Similarly, an EC2 instance in a public subnet accesses Amazon SNS directly through the internet gateway. While this approach works, it incurs costs because the NAT gateway charges fees. The internet gateway itself does not have a cost, but the multiple hops make this method inefficient.`
+* `Every AWS service is publicly exposed with a public URL. When you use VPC endpoints, they are powered by AWS PrivateLink, enabling private access to these services over the AWS network instead of the public internet.`
+* redundant and scale horizontally, eliminate need for internet/NAT gateway to access AWS services
+* **interface endpoints**
+    * provisions an elastic network interface with private ip address in vpc - need to *attach **security group*** (cos of the eni)
+    * supports most aws services 
+    * $/hour + $/gb of data processed
+* **gateway endpoints**
+    * provision a gateway used as a target in a route table, **don't use IP or security group**
+    * **only supports s3 and dynamo**
+    * free and scale automatically since only involve route table
+* for the exam - gateway endpoint is preferred cos free and scales better. if private access from on prem using site-to-site VPN or Direct Connect, or connect from another vpc thru **interface endpoint** (advanced use cases)
